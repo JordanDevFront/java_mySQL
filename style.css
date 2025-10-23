@@ -1,0 +1,375 @@
+/* Estilos Globais */
+:root {
+    --cor-principal: #007bff;
+    /* Azul vibrante */
+    --cor-secundaria: #6c757d;
+    /* Cinza para detalhes */
+    --cor-fundo: #f8f9fa;
+    /* Cinza claro, quase branco */
+    --cor-texto: #212529;
+    /* Preto para corpo do texto */
+    --cor-borda: #dee2e6;
+    --cor-fundo-destaque: #e9ecef;
+    /* Cinza mais escuro para listas/destaques */
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
+    line-height: 1.6;
+}
+
+code{
+    color: #007bff;
+}
+
+main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Títulos */
+h2 {
+    color: var(--cor-principal);
+    border-bottom: 2px solid var(--cor-principal);
+    padding-bottom: 10px;
+    margin-top: 30px;
+    font-size: 2em;
+}
+
+h4 {
+    color: var(--cor-secundaria);
+    margin-top: 25px;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+    background-color: var(--cor-fundo-destaque);
+    padding: 10px;
+    border-left: 5px solid var(--cor-principal);
+}
+
+/* Parágrafos e Spans */
+p {
+    margin-bottom: 15px;
+    text-align: justify;
+}
+
+span {
+    display: block;
+    /* Garante que o span ocupe toda a linha */
+    margin-bottom: 10px;
+}
+
+/* --- Estilos para o Blerta de Atenção --- */
+
+.alerta-aviso {
+    /* Cor de fundo para indicar aviso/atenção (amarelo suave) */
+    background-color: #fff3cd; 
+    
+    /* Cor da borda (laranja/dourado mais forte) */
+    border-left: 5px solid #ffc107; 
+    
+    /* Cor do texto para contraste */
+    color: #856404; 
+    
+    /* Espaçamento interno */
+    padding: 15px 20px; 
+    
+    /* Bordas arredondadas */
+    border-radius: 4px; 
+    
+    /* Margem para separar do conteúdo adjacente */
+    margin: 20px 0; 
+    
+    /* Garante que o texto fique justificado */
+    text-align: justify;
+}
+
+.alerta-aviso strong {
+    /* Destaca a palavra 'Atenção!!!' */
+    font-size: 1.1em;
+    display: block; /* Garante que 'Atenção!!!' fique em uma linha separada */
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.alerta-aviso p {
+    /* Remove a margem extra do parágrafo interno para ficar coeso */
+    margin-bottom: 0;
+    line-height: 1.5;
+}
+
+/* Data de Publicação */
+.data-post {
+    font-style: italic;
+    color: var(--cor-secundaria);
+    font-size: 0.9em;
+    margin-bottom: 20px;
+    border-bottom: 1px dashed var(--cor-borda);
+    padding-bottom: 10px;
+    text-align: left;
+}
+
+/* Imagens */
+img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid var(--cor-borda);
+    border-radius: 5px;
+    margin: 15px 0;
+    display: block;
+    /* Centraliza melhor a imagem se for menor que 100% */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Listas */
+ul {
+    list-style-type: square;
+    margin-left: 20px;
+    padding-left: 0;
+    margin-bottom: 20px;
+}
+
+ul li {
+    margin-bottom: 10px;
+}
+
+ul li div span strong {
+    color: var(--cor-principal);
+}
+
+/* Links */
+a {
+    color: var(--cor-principal);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Classes Específicas para Layouts Flexíveis (Usadas para o passo a passo) */
+.display-flex {
+    display: flex;
+    flex-wrap: wrap;
+    /* Permite que os itens quebrem a linha em telas menores */
+    align-items: flex-start;
+    /* Alinha os itens ao topo */
+    gap: 20px;
+    /* Espaço entre os itens */
+    margin: 20px 0;
+    padding: 15px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
+    background-color: var(--cor-fundo);
+}
+
+.display-flex .img,
+.display-flex>div:first-child {
+    /* Para a div que contém a imagem (exemplo do primeiro passo) */
+    flex: 1 1 400px;
+    /* Cresce e encolhe, com base mínima de 300px */
+}
+
+.display-flex .pad-10,
+.display-flex>div:last-child {
+    /* Para a div que contém o texto de explicação */
+    flex: 2 1 450px;
+    /* Prioriza mais espaço para o texto, com base mínima de 450px */
+    padding: 0;
+    /* O padding está no display-flex */
+}
+
+.pad-10 {
+    /* Usado em outros contextos que não são flex */
+    padding: 10px;
+}
+
+
+/* Estilo para Telas Menores (Responsividade) */
+@media (max-width: 768px) {
+    h2 {
+        font-size: 1.5em;
+    }
+
+    h4 {
+        font-size: 1.2em;
+    }
+
+    main {
+        padding: 10px;
+        box-shadow: none;
+        /* Remove a sombra em telas pequenas */
+    }
+
+    .display-flex {
+        flex-direction: column;
+        /* Empilha os itens verticalmente */
+        gap: 10px;
+    }
+
+    .display-flex .img,
+    .display-flex .pad-10,
+    .display-flex>div {
+        flex: 1 1 100%;
+        /* Ocupa 100% da largura */
+    }
+
+    /* A imagem dentro do bloco flex precisa garantir o 100% */
+    .display-flex img {
+        width: 100%;
+        margin: 0;
+    }
+}
+
+/* Footer */
+footer {
+    max-width: 900px;
+    margin: 20px auto 40px auto;
+    text-align: center;
+    padding: 15px 20px;
+    border-top: 1px solid var(--cor-borda);
+    color: var(--cor-secundaria);
+    font-size: 0.9em;
+}
+
+
+/* --- Biografia Moderna e Minimalista (AJUSTADO) --- */
+.bio-container {
+    display: flex;
+    /* Alinha o conteúdo verticalmente */
+    align-items: flex-start; /* MODIFICADO: Alinha a imagem e o texto no topo */
+    gap: 30px; /* MODIFICADO: Aumentei um pouco o espaço entre foto e texto */
+    background: #ffffff; /* MODIFICADO: Cor de fundo branca pura para minimalismo */
+    /* Removi o border para um visual mais suave */
+    border-radius: 16px; /* MODIFICADO: Borda um pouco menor */
+    padding: 40px; /* MODIFICADO: Aumentei o padding interno */
+    margin-top: 50px;
+    /* Sombra mais suave para um toque elegante */
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.08); /* MODIFICADO: Sombra mais pronunciada e suave */
+    transition: all 0.4s ease-in-out; /* MODIFICADO: Transição mais suave */
+    max-width: 900px; /* ADICIONADO: Limita a largura máxima do container */
+    margin-left: auto; /* ADICIONADO: Centraliza o container na página */
+    margin-right: auto; /* ADICIONADO: Centraliza o container na página */
+}
+
+.bio-container:hover {
+    /* Mantive o efeito hover suave */
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.12); /* MODIFICADO: Sombra maior no hover */
+    transform: translateY(-5px); /* MODIFICADO: Deslocamento vertical maior */
+}
+
+
+/* Foto - Ajuste fino */
+.bio-foto {
+    width: 100px; /* MODIFICADO: Diminuí um pouco o tamanho da foto */
+    height: 100px; /* MODIFICADO: Diminuí um pouco o tamanho da foto */
+    border-radius: 50%;
+    object-fit: cover;
+    /* Removi a borda azul e sombra no hover para um visual mais limpo */
+    border: 3px solid #e0e0e0; /* MODIFICADO: Borda mais discreta */
+    transition: transform 0.4s ease;
+}
+
+.bio-foto:hover {
+    /* Efeito de escala mais sutil */
+    transform: scale(1.03);
+}
+
+.bio-info {
+    width: 80%;
+}
+
+.bio-info h3 {
+    margin: 0 0 12px;
+    font-size: 1.8em; /* MODIFICADO: Um pouco maior */
+    color: #333333; /* MODIFICADO: Cor mais escura para o título */
+    font-weight: 700;
+}
+
+.bio-info p {
+    /* MODIFICADO: **REMOVENDO O MARGIN VERTICAL para controlar com o HTML/estrutura** */
+    margin: 0 0 15px; /* MODIFICADO: Define apenas o espaçamento abaixo de cada parágrafo */
+    color: #555555; /* MODIFICADO: Cor de texto padrão mais suave */
+    font-size: 1.1em; /* MODIFICADO: Fonte um pouco maior para melhor leitura */
+    line-height: 1.6; /* MODIFICADO: Espaçamento de linha ligeiramente menor */
+}
+
+.bio-info strong {
+    color: #333; /* MODIFICADO: Cor mais escura para destaques */
+    font-weight: 700; /* MODIFICADO: Mais peso */
+}
+
+.bio-info em {
+    /* Mantive o destaque de cor, mas ajustei a tonalidade para um azul mais escuro */
+    color: #0056b3; /* MODIFICADO: Azul mais profundo */
+    font-style: normal;
+    font-weight: 600;
+}
+
+/* Botões de Link */
+.bio-links {
+    display: flex;
+    gap: 15px; /* MODIFICADO: Espaçamento entre botões maior */
+    margin-top: 10px; /* ADICIONADO: Espaçamento acima dos botões */
+}
+
+.bio-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px; /* MODIFICADO: Botões um pouco maiores */
+    border-radius: 8px; /* MODIFICADO: Borda um pouco mais quadrada */
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.15); /* MODIFICADO: Sombra mais perceptível */
+}
+
+.bio-btn.linkedin {
+    /* Cores Flat/Sólidas no lugar do gradiente para um visual mais limpo */
+    background: #0077b5; /* MODIFICADO: Cor sólida */
+}
+
+.bio-btn.whatsapp {
+    /* Cores Flat/Sólidas no lugar do gradiente para um visual mais limpo */
+    background: #25d366; /* MODIFICADO: Cor sólida */
+}
+
+.bio-btn:hover {
+    transform: translateY(-2px); /* MODIFICADO: Deslocamento menor para um hover mais sutil */
+    box-shadow: 0 6px 15px rgba(0,0,0,0.20); /* MODIFICADO: Sombra maior no hover */
+    opacity: 0.9; /* ADICIONADO: Efeito de opacidade para feedback visual */
+}
+
+/* Responsivo (Ajustado) */
+@media (max-width: 768px) { /* MODIFICADO: Alterei para um breakpoint mais comum */
+    .bio-container {
+        flex-direction: column;
+        text-align: center;
+        padding: 30px 20px; /* MODIFICADO: Padding horizontal menor em mobile */
+        gap: 20px;
+    }
+
+    .bio-foto {
+        width: 100px;
+        height: 100px;
+    }
+
+    .bio-info p {
+        font-size: 1em; /* MODIFICADO: Fonte menor em mobile */
+    }
+
+    .bio-links {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}

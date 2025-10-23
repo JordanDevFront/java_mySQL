@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java ao MySQL</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main>
+        <article>
+            <h2>Do Java ao MySQL: Desvendando Nossa API Local de Cadastro de Produtos</h2>
+            <p class="data-post">Publicado em 23 de Outubro de 2025</p>
+            <p>
+                Seja bem-vindo(a) ao nosso primeiro mergulho no mundo do desenvolvimento Full Stack! Neste post, não
+                apenas
+                mostrarei o resultado final, mas vou detalhar passo a passo a arquitetura da minha mais recente
+                aplicação.
+                Exploraremos como o poder do Java foi utilizado para construir uma API robusta, como fizemos a mágica da
+                conexão
+                local com o MySQL para garantir a persistência dos dados e, finalmente, como estruturamos os endpoints
+                da API
+                para o crucial processo de cadastro de produtos.
+                Prepare-se para ver como a comunicação entre o back-end e banco de dados acontece na prática!
+            </p>
+
+            <h4>Primeiro passo (Criar o projeto no Eclipse)</h4>
+
+            <p>Com o eclipse aberto, vá até a aba File/New/Java Project</p>
+            <span>Ele irá abrir essa tela:</span>
+
+            <div class="display-flex">
+                <div class="img">
+                    <img src="./Imagens/Primeiro passo.png" alt="Tela de Criação de Novo Projeto Java no Eclipse" />
+                </div>
+
+                <div class="pad-10">
+                    <p>Em <strong>Project name</strong> você vai digitar o nome do seu projeto. Digite assim:
+                        <strong>ProjetoJavaMySQL</strong>
+                    </p>
+                    <p>Em <strong>Use an execution environment JRE</strong> você vai selecionar JavaSE-17 ou superior
+                        (Neste caso eu escolhi o JavaSE-21, aconselho você fazer o mesmo.)</p>
+
+                    <p>Em seguida você clica em <strong>Finish</strong></p>
+
+                    <p>Assim que você clicar em Finish, ele vai aparecer assim no seu Package Explore no lado esquerdo
+                        da sua tela</p>
+
+                    <div class="img-small">
+                        <img src="./Imagens/projetCriado.png" alt="Projeto criado no Package Explorer do Eclipse" />
+                    </div>
+                </div>
+            </div>
+
+            <h4>Segundo passo (Criação de pacotes <strong>Package</strong>)</h4>
+
+            <p>Clicando com o botão direito do mouse em cima do package <strong>src</strong> do seu projeto
+                <strong>ProjetoJavaMySQL</strong> (ou o nome que você deu)
+                você vai clicar em <strong>src/New/Package</strong>
+            </p>
+
+            <strong>Igual na imagem a baixo:</strong>
+
+            <div class="display-flex">
+                <div class="img">
+                    <img src="./Imagens/Segundo passo.png" alt="Menu de contexto para criar um novo Package" />
+                </div>
+
+                <div class="pad-10">
+                    <p><strong>Ao fazer isso ele irá abrir essa tela</strong></p>
+
+                    <div class="display-flex">
+                        <div class="img-small-inline"><img src="./Imagens/criarPackage.png"
+                                alt="Modal de criação de Package" /></div>
+                        <div class="pad-10">
+                            <ul>
+                                <li>
+                                    <div>
+                                        <span>
+                                            <strong>(Primeiro package)</strong> - No campo <strong>Name</strong>, digite
+                                            <strong>com.projeto.connection</strong>.
+                                        </span>
+                                        <p>
+                                            Esse package será responsável por armazenar a classe que fará a conexão com
+                                            o banco de dados
+                                            <strong>MySQL</strong>.
+                                        </p>
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <div>
+                                        <span>
+                                            <strong>(Segundo package)</strong> - No campo <strong>Name</strong>, digite
+                                            <strong>com.projeto.dao</strong>.
+                                        </span>
+                                        <p>
+                                            Esse package será responsável por armazenar as classes que fazem a
+                                            comunicação com o banco de dados, ou
+                                            seja, onde serão criados os objetos de acesso a dados (DAO).
+                                            Nele você vai implementar as operações de inserção, atualização, exclusão e
+                                            consulta (CRUD) das tabelas do
+                                            sistema.
+                                        </p>
+
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <div>
+                                        <span>
+                                            <strong>(Terceiro package)</strong> - No campo <strong>Name</strong>, digite
+                                            <strong>com.projeto.model</strong>.
+                                        </span>
+                                        <p>
+                                            Esse package será utilizado para armazenar as classes que representam as
+                                            entidades do sistema, ou seja, os
+                                            modelos dos dados que correspondem às tabelas do banco.
+                                            Por exemplo, aqui você pode criar classes como <strong>Produto</strong>,
+                                            <strong>Cliente</strong> ou
+                                            <strong>Usuário</strong>, que terão os atributos e métodos relacionados a
+                                            cada entidade.
+                                        </p>
+
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <div>
+                                        <span>
+                                            <strong>(Quarto package)</strong> - No campo <strong>Name</strong>, digite
+                                            <strong>com.projeto.app</strong>.
+                                        </span>
+                                        <p>
+                                            Esse package será responsável por armazenar a classe principal da aplicação,
+                                            geralmente a classe que contém
+                                            o método <strong>main()</strong> para executar o programa.
+                                            É o ponto de entrada da aplicação, onde você inicializa a lógica do sistema
+                                            e chama os métodos das classes
+                                            de <strong>model</strong> e <strong>DAO</strong>.
+                                        </p>
+
+                                    </div>
+                                </li>
+                            </ul>
+
+                            <p>
+                                Agora que criamos todos os packages, vamos para o terceiro passo: criar as classes
+                                correspondentes a cada um deles.
+                                Após finalizarmos essa etapa, começaremos a instalar o package necessário para fazer a
+                                conexão com o banco de dados.
+                                A partir daí, nosso foco será na estrutura do código, pois é muito importante definir a
+                                arquitetura do projeto antes
+                                de iniciar a lógica.
+                                Isso nos ajuda a manter o projeto mais organizado e facilita a manutenção futura.
+                            </p>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <h4>Terceiro passo (Criar as <strong>class</strong> dos package:)</h4>
+            <ul>
+                <li><strong>com.projeto.connection</strong></li>
+                <li><strong>com.projeto.dao</strong></li>
+                <li><strong>com.projeto.model</strong></li>
+                <li><strong>com.projeto.app</strong></li>
+            </ul>
+
+            <div class="pad-10">
+                <p>No package <strong>com.projeto.connection</strong> clica com o botão direito do mouse
+                    New/Class</p>
+
+                <p><strong>Ele irá abrir esse modal:</strong></p>
+
+                <div class="display-flex">
+                    <div class="img-small-inline"><img src="./Imagens/Terceiro passo.png"
+                            alt="Modal de criação de Nova Classe Java" /></div>
+                    <div class="pad-10">
+                        <ul>
+                            <li>
+                                <p>Em <strong>Name</strong> Você vai digitar <strong>ConnectionFactory.java</strong> em
+                                    seguida clica em Finish</p>
+                            </li>
+                            <li>
+                                <p><strong>(Segunda class no package com.projeto.dao ) - </strong>Em
+                                    <strong>Name</strong> você vai digitar <strong>ProdutoDAO</strong> em seguida clica
+                                    em Finish
+                                </p>
+                            </li>
+                            <li>
+                                <p><strong>(Terceira class no package com.projeto.model ) - </strong>Em
+                                    <strong>Name</strong> você vai digitar <strong>Produto</strong> em seguida clica em
+                                    Finish
+                                </p>
+                            </li>
+                            <li>
+                                <p><strong>(Quarta class no package com.projeto.app ) - </strong>Em
+                                    <strong>Name</strong> você vai digitar <strong>MainApp</strong> em seguida clica em
+                                    Finish
+                                </p>
+                            </li>
+                        </ul>
+
+                        <p>
+                            Bom, agora sim, chegamos à parte mais técnica e lógica do nosso projeto!<br />
+                            Quero reforçar que este é um projeto simples, desenvolvido com o objetivo de ajudar quem
+                            está
+                            começando a programar em Java.
+                            Procurei manter tudo o mais claro e didático possível, para que você possa compreender cada
+                            etapa
+                            sem se sentir sobrecarregado.
+                            Ao longo do processo, vamos aplicar conceitos importantes de orientação a objetos,
+                            organização de
+                            código em packages e conexão com o banco de dados MySQL.
+                            Mesmo sendo um projeto básico, ele serve como uma base sólida para que você possa evoluir e
+                            criar
+                            aplicações mais completas no futuro.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <h4>Quarto passo – Instalar a biblioteca para conexão com o banco de dados MySQL</h4>
+
+            <span>
+                Iremos utilizar o <strong><a href="https://dev.mysql.com/downloads/connector/j/" target="_blank">MySQL
+                        Connector/J</a></strong>.
+                Você pode encontrá-lo facilmente pesquisando no Google por <em>“MySQL Connector/J download”</em> ou
+                clicando diretamente no link acima,
+                que levará você à página oficial de download da biblioteca.
+            </span>
+
+            <div class="pad-10">
+                <p>
+                    O <strong>MySQL Connector/J 9.4.0</strong> (ou qualquer versão mais recente) é uma biblioteca
+                    <strong>(.jar)</strong> desenvolvida pela Oracle,
+                    responsável por permitir que aplicações Java se conectem e interajam com bancos de dados
+                    <strong>MySQL</strong>.
+                    Essa biblioteca atua como um <strong>driver JDBC (Java Database Connectivity)</strong>, sendo
+                    essencial para que o Java consiga enviar comandos SQL
+                    e receber respostas do banco de forma eficiente.
+                </p>
+
+                <p>No Select Operating System a baixo na imagem selecione a opção <strong>Plataform Independent</strong>
+                </p>
+            </div>
+
+            <div class="img-block">
+                <img src="./Imagens/libMysql.png"
+                    alt="Página de download do MySQL Connector/J com Plataform Independent selecionado" />
+            </div>
+
+            <p>
+                Ao procurar essa biblioteca na internet, você provavelmente encontrará várias versões disponíveis.
+                Não há problema em utilizar uma versão diferente — qualquer uma delas funcionará corretamente.
+                No entanto, para quem utiliza Windows, recomendo baixar a <strong>segunda opção (formato .zip)</strong>,
+                pois é a mais prática para extrair e configurar no Eclipse.
+            </p>
+
+            <p>
+                Depois de baixar o arquivo <strong>.zip</strong>, extraia (descompacte) o conteúdo e abra a pasta.
+                Dentro dela, você verá vários arquivos, mas precisará utilizar apenas um: o
+                <strong>mysql-connector-j-9.4.0.jar</strong>
+                (ou o nome correspondente à versão que você baixou).
+            </p>
+
+
+            <div class="img-block">
+                <img src="./Imagens//Quarto passo.png"
+                    alt="Conteúdo da pasta do MySQL Connector/J destacando o arquivo JAR" />
+            </div>
+
+            <p>Agora vai no seu projeto, com o botão direito você clica em <strong>properties</strong></p>
+
+            <p>E este modal será aberto:</p>
+
+
+            <div class="display-flex">
+                <div class="img-small-inline">
+                    <img src="./Imagens/properties.png" alt="Modal Properties do projeto no Eclipse" />
+                </div>
+
+                <div class="pad-10">
+                    <p>
+                        No menu lateral do modal, selecione a opção <strong>Java Build Path</strong>.
+                    </p>
+
+                    <p>
+                        Em seguida, no painel central do modal, escolha a guia <strong>Modulepath</strong> e clique no
+                        botão
+                        <strong>Add External JARs...</strong>, localizado no lado direito da janela.
+                    </p>
+
+                    <p>
+                        Ao clicar, será aberta uma janela para que você selecione a biblioteca que baixou anteriormente
+                        — o arquivo
+                        <strong>mysql-connector-j-9.4.0.jar</strong> (ou a versão correspondente).
+                        Após selecioná-lo, confirme para adicioná-lo ao seu projeto.
+                    </p>
+                </div>
+
+            </div>
+
+            <p><strong>Perfeito, agora sim. Você tem a lib no seu projeto para começarmos a fazer a conexão com o banco
+                    de dados</strong></p>
+
+            <p>Perceba que ela se encontra dentro do Referenced Libraries, que está fora de src</p>
+
+            <div class="img-block">
+                <img src="./Imagens/importadoLibmysql.png"
+                    alt="Estrutura do projeto no Eclipse mostrando o JAR importado em Referenced Libraries" />
+            </div>
+            <h4>Quinto passo – Montar a classe ConnectionFactory.java</h4>
+
+
+            <span>
+                Agora, é hora de criar nossa classe ConnectionFactory, o coração da nossa conexão com o banco de dados
+                MySQL. Compartilharei capturas de tela do código para guiar vocês. No entanto, o aprendizado real virá
+                quando vocês digitarem e experimentarem por conta própria, linha por linha, para dominar a prática!
+            </span>
+
+            <div class="display-flex">
+                <div class="img-block">
+                    <img src="./Imagens/code/primeiro.png" alt="Variaveis importantes para conexão" />
+                </div>
+
+                <span>
+                    Quero que vocês prestem bastante atenção nessas variáveis: <strong>USER</strong>,
+                    <strong>PASSWORD</strong>, <strong>DB_NAME</strong>, <strong>INITIAL_URL</strong> e
+                    <strong>FINAL_URL</strong>.
+                    São elas que vamos utilizar para realizar a conexão com o banco de dados MySQL.
+
+                    <p>
+                        Na imagem acima, você deve preencher o campo <strong>USER</strong> com o seu nome de usuário do
+                        MySQL (o mesmo que você usa no Workbench)
+                        e o campo <strong>PASSWORD</strong> com a sua senha.
+                        Já o <strong>INITIAL_URL</strong> define o endereço base de conexão com o servidor MySQL, que
+                        por
+                        padrão será:
+                    </p>
+
+                    <p><code>jdbc:mysql://localhost:3306/?allowMultiQueries=true&amp;serverTimezone=UTC</code></p>
+
+                    <p>
+                        Observe que em <strong>localhost:3306</strong>, o número <strong>3306</strong> representa a
+                        porta
+                        padrão do MySQL.
+                        No entanto, se o seu MySQL estiver configurado em uma porta diferente, basta ajustar esse valor
+                        conforme a sua instalação.
+                    </p>
+
+                    <p>
+                        Já a variável <strong>FINAL_URL</strong> é responsável por montar o endereço completo da
+                        conexão,
+                        unindo o caminho base com o nome do banco de dados definido em <strong>DB_NAME</strong>.
+                        Ela normalmente é declarada assim:
+                    </p>
+
+                    <p><code>FINAL_URL = "jdbc:mysql://localhost:3306/" + DB_NAME + "?serverTimezone=UTC";</code></p>
+
+                    <p>
+                        Ou seja, o <strong>DB_NAME</strong> será concatenado ao final da URL, criando o endereço final
+                        do
+                        seu banco.
+                        Por exemplo, se o nome do seu banco for <strong>loja_virtual</strong>, a URL resultante será:
+                    </p>
+
+                    <p><code>jdbc:mysql://localhost:3306/loja_virtual?serverTimezone=UTC</code></p>
+
+                    <p>
+                        Essa <strong>FINAL_URL</strong> é a string que o Java usará para estabelecer a conexão real com
+                        o
+                        banco de dados específico dentro do servidor MySQL.
+                    </p>
+                </span>
+
+            </div>
+
+            <div class="display-flex">
+                <strong>Continuando ainda na class <code>ConnectionFactory</code></strong>
+                <div class="img-block">
+                    <img src="./Imagens/code/segundo.png" alt="Variaveis importantes para conexão" />
+                </div>
+
+                <span>
+                    <p>
+                        Vamos estabelecer a conexão com o banco de dados utilizando o método
+                        <code>DriverManager.getConnection</code> dentro do método <code>initializeDatabase</code>
+                        O método <code>DriverManager.getConnection</code> receberá as variáveis
+                        <code>INITIAL_URL</code>, <code>USER</code>,
+                        <code>PASSWORD</code> como parâmetros.
+                        Uma vez que a conexão (<code>Connection</code>) for obtida, usaremos o método
+                        <code>connection.createStatement()</code>
+                        para criar um objeto <code>Statement,</code> que é o que nos permite executar comandos SQL.
+                    </p>
+
+                    <p>Uma vez estabelecida a conexão, vamos definir nosso primeiro comando SQL:</p>
+
+                    <p><code><code>String sql = "CREATE DATABASE IF NOT EXISTS " + DB_NAME + ";";</code></code></p>
+
+                    <p>Este comando irá criar um banco de dados cujo nome será o valor contido na variável
+                        <code>DB_NAME</code> (no nosso caso, <code>estoque_db</code>, como definimos anteriormente na
+                        linha 13).
+                    </p>
+
+                    <p>Após a definição da variável <code>sql</code> (com o comando <code>CREATE DATABASE</code>), vamos
+                        redefini-la
+                        ou adicionar o comando para <strong>usar</strong> o banco de dados que acabamos de criar:</p>
+
+
+                    <code>sql = "USE " + DB_NAME + ";"; // NOTA: É fundamental executar este comando após a criação do DB.</code>
+
+                    <p>Depois de apontarmos o banco de dados a ser usado, vamos definir o comando
+                        para criar a tabela <strong>Produto</strong>. Essa tabela terá <strong>três</strong> colunas (ou
+                        campos/atributos):
+                        <code>id</code>, <code>nome</code> e <code>preco</code>.
+                    </p>
+
+                    <div class="alerta-aviso">
+                        <strong>Atenção!!!</strong>
+                        <p>
+                            Para você entender o que o comando sql está fazendo, é importante você ter pelo menos o
+                            básico de comando SQL.
+                            Caso você não tenha, é muito importante que você comece a estudar essa parte que será muito
+                            importante para o seu aprendizado.
+                        </p>
+                    </div>
+
+                    <p>Utilizando a instrução <code>stmt.execute(sql);</code>, vamos <strong>executar</strong> nosso
+                        comando SQL definido na variável <code>sql</code>,
+                        através do método <code>execute</code> do objeto <code>Statement</code>.</p>
+
+                    <p>
+                        Caso ocorra algum problema durante a interação ou configuração com o banco de dados, o erro será
+                        capturado pela exceção
+                        <code>SQLException</code>. No nosso código, utilizaremos essa exceção para disparar uma falha
+                        (erro) encapsulada, muitas vezes com o uso de
+                        uma <code>RuntimeException</code> (ou uma exceção própria) para interromper o processo de forma
+                        controlada.
+                    </p>
+
+                    <p>
+                        Caso ocorra um erro de conexão com o banco de dados (por exemplo, credenciais digitadas
+                        incorretamente), o método responsável por estabelecer essa conexão irá
+                        <strong>sinalizar</strong> a falha.
+                        Essa sinalização é feita pelo uso da instrução <code>throws SQLException</code>, presente na
+                        assinatura do método:
+                        <br>
+                        <code>public static Connection getConnection() throws SQLException</code>
+                        <br>
+                        Isso significa que, se houver um erro, o método <strong>lançará</strong> (ou propagará) uma
+                        exceção do tipo
+                        <code>SQLException</code>, que deverá ser tratada pelo código que o chamou. <br />Como mostra a
+                        imagem abaixo:
+
+                    <div class="img-block">
+
+                        <img src="./Imagens/code/terceiro.png" alt="erro de conexão com o banco sql" />
+                    </div>
+                    </p>
+
+                    <p><strong>Agora que montamos a classe <code>ConnectionFactory</code>, vamos chamá-la na nossa
+                            classe principal,
+                            a <code>MainApp</code>, que contém o método de inicialização <code>main</code>.</strong></p>
+
+                    <div class="img-block">
+                        <img src="./Imagens/code/quarto.png" alt="MainApp" />
+                    </div>
+
+                    <p>Criamos um <code>try</code> dentro do método main que vai tentar criar o banco de dados
+                        usando o método <code>initializeDatabase</code> a qual criamos na classe
+                        <code>ConnectionFactory</code>.
+                    </p>
+
+
+                    <p>E no final criamos um outro <ccode>try</ccode> para tentar obter uma conexão com o banco de
+                        dados, caso der erro ele cairá dentro do
+                        <code>catch SQLException</code>, como mostra a imagem abaixo
+                    </p>
+
+                    <div class="img-block">
+                        <img src="./Imagens/code/quinto.png" alt="MainApp" />
+                    </div>
+
+                    <p>Assim que você salvar e rodar essa class <code>MainApp</code>, ele vai aparecer isso aqui no
+                        <code>console</code>
+                    </p>
+
+                    <div class="img-block">
+                        <img src="./Imagens/code/sexto.png" alt="MainApp" />
+                    </div>
+
+                    <p>E no seu banco de dados MySQL, ele vai mostrar o banco <code>db_estoque</code> e a tabela
+                        <code>produto</code>, como
+                        mostra a imagem abaixo
+                    </p>
+
+                    <div class="img-block">
+                        <img src="./Imagens/code/bancodedados.png" alt="MainApp" />
+                    </div>
+
+                    <p>
+                        Viu só como foi tranquilo? Nada de "bicho de sete cabeças" aqui! O segredo é: Organização,
+                        Observação e Lógica. Mantenha a estrutura das suas classes limpa, preste atenção em cada
+                        detalhe, e procure entender a função de cada linha de código. Quando você faz isso, o que
+                        parecia impossível fica tão fácil quanto preparar um miojo na noite fria de sábado! 😉 Mãos à
+                        obra!
+                    </p>
+
+                </span>
+            </div>
+
+            <h4>Quinto e último passo - Montar nossas classes Produto e ProdutoDAO para Inserir um cadastro na nossa
+                tabela
+                Produto</h4>
+
+            <span>
+                Primeiramente, vamos definir nossa <strong>classe</strong> Produto. Nela, declararemos os seus
+                <strong>atributos</strong> (ou campos) e, em seguida,
+                implementaremos os métodos <code>Getters</code> e <code>Setters</code> para manipulação desses dados."
+            </span>
+
+            <div class="display-flex">
+
+                <div class="img-block">
+                    <img src="./Imagens/code/produtoclass.png" alt="Classe Produto" />
+                </div>
+
+                <p>
+                    Esta é a nossa classe <code>Produto</code>. Ela servirá como o <strong>modelo</strong> (ou
+                    <strong>Model</strong>) que utilizaremos
+                    na classe <code>ProdutoDAO</code> para realizar a inserção de dados no banco.
+                    <br><br>
+                    Observe que definimos três <strong>atributos</strong> iniciais: <code>id</code>, <code>nome</code> e
+                    <code>preço</code>. Para simplificar o exemplo, manteremos apenas esses campos, mas você está livre
+                    para
+                    aprimorar e adicionar quantos atributos desejar!
+                    <br><br>
+                    No Java, para acessar ou modificar o valor desses atributos a partir de outras classes, é
+                    fundamental
+                    implementar os métodos <strong>Getters e Setters</strong>:
+                <ul>
+                    <li>O <strong>Setter</strong> (ou método <code>set</code>) é usado para <strong>definir</strong>
+                        (alterar ou atribuir) o valor de um
+                        atributo.</li>
+                    <li>O <strong>Getter</strong> (ou método <code>get</code>) é usado para <strong>obter</strong>
+                        (mostrar
+                        ou retornar) o valor contido no
+                        atributo.</li>
+                </ul>
+                </p>
+
+                <strong>Bom, agora que montamos a classe Produto, vamos montar a classe ProdutoDAO</strong>
+
+                <div class="img-block">
+                    <img src="./Imagens/code/produtodao.png" alt="Classe ProdutoDAO" />
+                </div>
+                <span>
+
+                    <p>
+                        <code>import java.sql.PreparedStatement;</code>
+                        <br>Importa a interface <code>PreparedStatement</code>, que é usada para executar comandos SQL
+                        de forma
+                        segura e eficiente, prevenindo ataques de SQL Injection.
+                    </p>
+
+                    <p>
+                        <code>import com.projeto.connection.ConnectionFactory;</code>
+                        <br>Importa a nossa classe <code>ConnectionFactory</code>, criada anteriormente, que é
+                        responsável por
+                        fornecer a conexão ativa com o banco.
+                    </p>
+                    <p>
+                        <code>import com.projeto.model.Produto;</code>
+                        <br>Importa a classe <code>Produto</code>, que representa o objeto (modelo de dados) que será
+                        manipulado
+                        nesta classe DAO.
+                    </p>
+                    <p>
+                        <code>public class ProdutoDAO {</code>
+                        <br>Declaração da nossa classe <code>ProdutoDAO</code>, que conterá os métodos para realizar as
+                        operações de CRUD (Criar, Ler, Atualizar, Deletar).
+                    </p>
+                    <p>
+                        <code>public void cadastrar(Produto produto) {</code>
+                        <br>Declaração do método <code>cadastrar</code>. Ele é <strong>público</strong>, não retorna
+                        nada
+                        (<code>void</code>) e aceita um objeto <code>Produto</code> como parâmetro (o dado a ser
+                        inserido).
+                    </p>
+                    <p>
+                        <code>String sql = "INSERT INTO produto (nome, preco) VALUES (?, ?)";</code>
+                        <br>Define a <strong>String</strong> SQL para a inserção de dados. O uso de interrogações
+                        (<code>?</code>) indica que
+                        os valores serão passados posteriormente através do <code>PreparedStatement</code>.
+                    </p>
+                    <p>
+                        <code>try (Connection conn = ConnectionFactory.getConnection();</code>
+                        <br>Início do bloco <code>try-with-resources</code>. Ele tenta obter uma conexão
+                        (<code>conn</code>)
+                        usando a <code>ConnectionFactory</code>. <strong>O <code>try-with-resources</code> garante que a
+                            conexão
+                            será fechada automaticamente</strong>, mesmo que ocorra um erro.
+                    </p>
+                    <p>
+                        <code>PreparedStatement stmt = conn.prepareStatement(sql)){</code>
+                        <br>Cria o <code>PreparedStatement</code> (<code>stmt</code>) a partir da conexão
+                        (<code>conn</code>),
+                        pré-compilando o comando SQL definido.
+                    </p>
+                    <p>
+                        <code>stmt.setString(1, produto.getNome());</code>
+                        <br>Define o valor do <strong>primeiro</strong> parâmetro (<code>?</code> na posição 1) da
+                        <strong>String</strong> SQL, usando o
+                        nome (`String`) obtido do objeto <code>produto</code> através do seu Getter.
+                    </p>
+                    <p>
+                        <code>stmt.setDouble(2, produto.getPreco());</code>
+                        <br>Define o valor do <strong>segundo</strong> parâmetro (<code>?</code> na posição 2) da
+                        <strong>String</strong> SQL, usando o
+                        preço (`Double`) obtido do objeto <code>produto</code>.
+                    </p>
+                    <p>
+                        <code>stmt.executeUpdate();</code>
+                        <br><strong>Executa o comando SQL</strong>. O método <code>executeUpdate</code> é usado para
+                        comandos
+                        que modificam dados (como <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>).
+                    </p>
+                    <p>
+                        <code>System.out.println("-> [CRUD] Produto cadastrado: " + produto.getNome());</code>
+                        <br>Mensagem de sucesso exibida no console para confirmar que o cadastro foi realizado.
+                    </p>
+                    <p>
+                        <code>} catch (SQLException e) {</code>
+                        <br>Fim do bloco <code>try</code> e início do bloco <code>catch</code>. Ele captura qualquer
+                        <code>SQLException</code> que possa ser lançada durante a conexão ou execução do comando.
+                    </p>
+                    <p>
+                        <code>System.err.println("-> [ERRO] Falha ao cadastrar produto: " + e.getMessage());</code>
+                        <br>Exibe uma mensagem de erro no console (usando <code>System.err</code> para destaque) caso o
+                        cadastro
+                        falhe, mostrando a mensagem de erro da exceção (<code>e.getMessage()</code>).
+                    </p>
+                    <p>
+                        <code>}</code>
+                        <br>Fechamento do bloco <code>catch</code> e, consequentemente, do método <code>cadastrar</code>
+                        e da
+                        classe <code>ProdutoDAO</code>.
+                    </p>
+
+                    <strong>Depois que fizer isso, vamos ir lá na classe <code>MainApp</code> para chamar o ProdutoDAO
+                        para
+                        inserir alguns produtos
+                        na nossa tabela Produto no banco de dados estoque_db</strong>
+
+                    <p>Você vai atualizar a classe <code>MinApp</code> e deixar assim, como mostra a imagem abaixo:</p>
+
+                    <div class="img-block">
+                        <img src="./Imagens/code/result.png" alt="Resultado após o cadastro dos produtos" />
+                    </div>
+
+                    <p>
+                        Aqui nós instanciamos a classe <code>ProdutoDAO</code> para poder chamar o método
+                        <code>cadastrar()</code>, que é responsável por salvar os produtos no banco de dados.
+                        Repare que a variável <code>dao</code> é a instância da classe <code>ProdutoDAO</code>, e é
+                        através dela
+                        que conseguimos acessar o método <code>cadastrar()</code>.
+                        Antes disso, também criamos (instanciamos) objetos da classe <code>Produto</code> — nesse caso,
+                        <code>p1</code> e <code>p2</code> — atribuindo o nome e o preço de cada produto.
+                        Esses objetos são então passados como parâmetro para o método <code>cadastrar()</code>, que
+                        grava as
+                        informações no banco.
+                    </p>
+
+                    <p>E o resultado será esse rapaziada.</p>
+
+                    <div class="img-block">
+                        <img src="./Imagens/code/insert.png" alt="Resultado após o cadastro dos produtos" />
+                    </div>
+
+                </span>
+            </div>
+        </article>
+
+
+        <div class="bio-container">
+            <img src="./Imagens/minhafoto.jpg" alt="Foto do autor" class="bio-foto" />
+
+            <div class="bio-info">
+
+                <h3>Jordan Faustino</h3>
+
+                <p>
+                    Sou <strong>programador Full Stack</strong> com 29 anos, especializado em <strong>desenvolvimento
+                        Front-End</strong> há mais de 5 anos. Tenho ampla experiência com <strong>React</strong> na
+                    criação
+                    de interfaces modernas, responsivas e performáticas, e estudo continuamente
+                    <strong>Java</strong> e <strong>Node.js</strong> (JavaScript) para o desenvolvimento Back-End.
+                </p>
+
+                <p>
+                    Atualmente curso duas graduações na <strong>UNICID</strong>, em <em>Cloud Computing</em> e
+                    <em>Data Science</em>, o que reforça minha paixão por tecnologia e por entender cada camada que faz
+                    a web
+                    acontecer.
+                </p>
+
+                <p>
+                    Criei esta página como uma forma de compartilhar tudo o que aprendo — porque acredito que
+                    <strong>ensinar é uma das melhores formas de evoluir</strong>. Meu objetivo é inspirar, ajudar
+                    e crescer junto com quem também busca se aprimorar na área da programação.
+                </p>
+
+                <div class="bio-links">
+                    <a href="https://www.linkedin.com/in/jordan-faustino/" target="_blank" class="bio-btn linkedin">
+                        <i class="fa-brands fa-linkedin"></i> LinkedIn
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Java ao MySQL</p>
+    </footer>
+
+</body>
+
+</html>
