@@ -364,6 +364,10 @@ footer {
         height: 100px;
     }
 
+    .bio-info{
+        width: 100%;
+    }
+
     .bio-info p {
         font-size: 1em; /* MODIFICADO: Fonte menor em mobile */
     }
